@@ -58,6 +58,8 @@ TESTS +=  \
 	invalid_nested_include.sh \
 	omfwd-keepalive.sh \
 	omfile-read-only-errmsg.sh \
+	omfile-null-filename.sh \
+	omfile-whitespace-filename.sh \
 	omfile-read-only.sh \
 	omfile_both_files_set.sh \
 	msgvar-concurrency.sh \
@@ -318,6 +320,9 @@ TESTS +=  \
 	rscript_previous_action_suspended.sh \
 	rscript_str2num_negative.sh \
 	rscript-config_enable-on.sh \
+	rs-cnum.sh \
+	rs-substring.sh \
+	rs-int2hex.sh \
 	mmanon_random_32_ipv4.sh \
 	mmanon_random_cons_32_ipv4.sh \
 	mmanon_recognize_ipv4.sh \
@@ -791,6 +796,7 @@ TESTS += \
 	imfile-wildcards-dirs-multi4.sh \
 	imfile-wildcards-dirs-multi5.sh \
 	imfile-wildcards-dirs-multi5-polling.sh \
+	imfile-old-state-file.sh \
 	imfile-rename-while-stopped.sh \
 	imfile-rename.sh
 
@@ -1007,6 +1013,9 @@ EXTRA_DIST= \
 	rscript_backticks-vg.sh \
 	rscript_previous_action_suspended.sh \
 	rscript_str2num_negative.sh \
+	rs-cnum.sh \
+	rs-int2hex.sh \
+	rs-substring.sh \
 	mmanon_random_32_ipv4.sh \
 	mmanon_random_cons_32_ipv4.sh \
 	mmanon_recognize_ipv4.sh \
@@ -1042,6 +1051,8 @@ EXTRA_DIST= \
 	testsuites/stop-msgvar.conf \
 	omfwd-keepalive.sh \
 	omfile-read-only-errmsg.sh \
+	omfile-null-filename.sh \
+	omfile-whitespace-filename.sh \
 	omfile-read-only.sh \
 	omfile_both_files_set.sh \
 	msgvar-concurrency.sh \
@@ -1454,6 +1465,7 @@ EXTRA_DIST= \
 	testsuites/complex1.conf \
 	random.sh \
 	testsuites/random.conf \
+	testsuites/imfile-old-state-file_imfile-state_.-rsyslog.input \
 	imfile-readmode0-vg.sh \
 	imfile-readmode2.sh \
 	imfile-readmode2-polling.sh \
@@ -1494,6 +1506,7 @@ EXTRA_DIST= \
 	imfile-wildcards-dirs-multi4.sh \
 	imfile-wildcards-dirs-multi5.sh \
 	imfile-wildcards-dirs-multi5-polling.sh \
+	imfile-old-state-file.sh \
 	imfile-rename-while-stopped.sh \
 	imfile-rename.sh \
 	testsuites/imfile-wildcards-simple.conf \

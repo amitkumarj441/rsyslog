@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.61)
-AC_INIT([rsyslog],[8.34.0.master],[rsyslog@lists.adiscon.com])
+AC_INIT([rsyslog],[8.35.0.master],[rsyslog@lists.adiscon.com])
 
 # AIXPORT START: Detect the underlying OS
 unamestr=$(uname)
@@ -254,7 +254,7 @@ AC_LINK_IFELSE([AC_LANG_PROGRAM(, return __builtin_expect(main != 0, 1))],
 # speeds up processig.
 # note that when automic operations are enabled but not available, they
 # will silently NOT be used!
-AC_ARG_ENABLE(regexp,
+AC_ARG_ENABLE(atomic-operations,
         [AS_HELP_STRING([--enable-atomic-operations],[Enable atomic operation support @<:@default=yes@:>@])],
         [case "${enableval}" in
          yes) enable_atomic_operations="yes" ;;
@@ -1099,6 +1099,9 @@ AC_ARG_ENABLE(fmhttp,
          esac],
         [enable_fmhttp=yes]
 )
+if test "$enable_fmhttp" = "yes"; then
+        PKG_CHECK_MODULES([CURL], [libcurl])
+fi
 AM_CONDITIONAL(ENABLE_FMHTTP, test x$enable_fmhttp = xyes)
 
 
@@ -1317,6 +1320,19 @@ if test "x$enable_mmrfc5424addhmac" = "xyes"; then
 #AC_CHECK_HEADERS([openssl/crypto.h openssl/x509.h openssl/pem.h openssl/ssl.h openssl/err.h],[],[AC_MSG_ERROR([OpenSSL headers required])])
 fi
 AM_CONDITIONAL(ENABLE_MMRFC5424ADDHMAC, test x$enable_mmrfc5424addhmac = xyes)
+
+
+# experimental omfile-hardened module
+AC_ARG_ENABLE(omfile-hardened,
+        [AS_HELP_STRING([--enable-omfile-hardened],[Enable omfile-hardened support @<:@default=no@:>@])],
+        [case "${enableval}" in
+         yes) enable_omfile_hardened="yes" ;;
+          no) enable_omfile_hardened="no" ;;
+           *) AC_MSG_ERROR(bad value ${enableval} for --enable-omfile-hardened) ;;
+         esac],
+        [enable_omfile_hardened=no]
+)
+AM_CONDITIONAL(ENABLE_OMFILE_HARDENED, test x$enable_omfile_hardened = xyes)
 
 
 # RELP support
@@ -2266,6 +2282,7 @@ AC_CONFIG_FILES([Makefile \
 		contrib/omhttpfs/Makefile \
 		contrib/omamqp1/Makefile \
 		contrib/omtcl/Makefile \
+		contrib/omfile-hardened/Makefile \
 		contrib/mmkubernetes/Makefile \
 		tests/Makefile])
 AC_OUTPUT
@@ -2289,6 +2306,7 @@ echo "    liblogging-stdlog support enabled:        $enable_liblogging_stdlog"
 echo "    libsystemd enabled:                       $enable_libsystemd"
 echo "    libcurl enabled:                          $enable_libcurl"
 echo "    kafka static linking enabled:             $enable_kafka_static"
+echo "    atomic operations enabled:                $enable_atomic_operations"
 echo
 echo "---{ input plugins }---"
 echo "    Klog functionality enabled:               $enable_klog ($os_type)"
@@ -2305,6 +2323,7 @@ echo "    imkafka module will be compiled:          $enable_imkafka"
 echo
 echo "---{ output plugins }---"
 echo "    Mail support enabled:                     $enable_mail"
+echo "    omfile-hardened module will be compiled:  $enable_omfile_hardened"
 echo "    omprog module will be compiled:           $enable_omprog"
 echo "    omstdout module will be compiled:         $enable_omstdout"
 echo "    omjournal module will be compiled:        $enable_omjournal"

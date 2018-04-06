@@ -84,7 +84,7 @@ struct kafka_params {
 #define RESUBMIT	1
 #define NO_RESUBMIT	0
 
-#if HAVE_ATOMIC_BUILTINS64
+#ifdef HAVE_ATOMIC_BUILTINS64
 static uint64 clockTopicAccess = 0;
 #else
 static unsigned clockTopicAccess = 0;
@@ -96,7 +96,7 @@ static pthread_mutex_t mutClock;
 static uint64
 getClockTopicAccess(void)
 {
-#if HAVE_ATOMIC_BUILTINS64
+#ifdef HAVE_ATOMIC_BUILTINS64
 	return ATOMIC_INC_AND_FETCH_uint64(&clockTopicAccess, &mutClock);
 #else
 	return ATOMIC_INC_AND_FETCH_unsigned(&clockTopicAccess, &mutClock);
@@ -142,6 +142,7 @@ typedef struct _instanceData {
 	int fixedPartition;
 	int nPartitions;
 	uint32_t currPartition;
+	DEF_ATOMIC_HELPER_MUT(mutCurrPartition);
 	int nConfParams;
 	struct kafka_params *confParams;
 	int nTopicConfParams;
@@ -1216,6 +1217,7 @@ CODESTARTcreateInstance
 	CHKiRet(pthread_mutex_init(&pData->mutErrFile, NULL));
 	CHKiRet(pthread_rwlock_init(&pData->rkLock, NULL));
 	CHKiRet(pthread_mutex_init(&pData->mutDynCache, NULL));
+	INIT_ATOMIC_HELPER_MUT(pData->mutCurrPartition);
 finalize_it:
 ENDcreateInstance
 
@@ -1274,6 +1276,7 @@ CODESTARTfreeInstance
 		free((void*) pData->topicConfParams[i].val);
 	}
 	free(pData->topicConfParams);
+	DESTROY_ATOMIC_HELPER_MUT(pData->mutCurrPartition);
 	pthread_rwlock_destroy(&pData->rkLock);
 	pthread_mutex_destroy(&pData->mut_doAction);
 	pthread_mutex_destroy(&pData->mutErrFile);
